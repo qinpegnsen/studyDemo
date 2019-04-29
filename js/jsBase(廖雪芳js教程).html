@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>学习廖雪峰js教程笔记</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 1. delte 删除对象的属性和值,不仅仅是属性
+    // 2. 如果我们要检测对象是否拥有某一属性，可以用in操作符；对象的循环就是这个原理
+    var xiaoming = {
+        name: '小明',
+        birth: 1990,
+        school: 'No.1 Middle School',
+        height: 1.70,
+        weight: 65,
+        score: null
+    };
+    'name' in xiaoming; // true
+    'grade' in xiaoming; // false
+
+    //不过要小心，如果in判断一个属性存在，这个属性不一定是xiaoming的，它可能是xiaoming继承得到的
+    'toString' in xiaoming; // true
+
+    // 要判断一个属性是否是xiaoming自身拥有的，而不是继承得到的，可以用hasOwnProperty()方法：
+    var xiaoming = {
+        name: '小明'
+    };
+    xiaoming.hasOwnProperty('name'); // true
+    xiaoming.hasOwnProperty('toString'); // false
+
+    // 3. 知道循环次数用for循环，不知道次数，但是知道真假用while,比如取款机输入密码
+
+    // 4. map 和 set 对象的产生，JavaScript的默认对象表示方式{}可以视为其他语言中的Map或Dictionary的数据结构，即一组键值对。
+
+    // 但是JavaScript的对象有个小问题，就是键必须是字符串。但实际上Number或者其他数据类型作为键也是非常合理的。
+
+    // 为了解决这个问题，最新的ES6规范引入了新的数据类型Map，  map 表现为一个2维的数组   set 表现为一个一维的数组
+
+
+    // 5. iterable(可迭代的) 遍历Array可以采用下标循环，遍历Map和Set就无法使用下标。为了统一集合类型，ES6标准引入了新的iterable类型，Array、Map和Set都属于iterable类型。
+
+    // 具有iterable类型的集合可以通过新的for ...of循环来遍历。
+    var a = ['A', 'B', 'C'];
+    var s = new Set(['A', 'B', 'C']);  //Set和Map类似，也是一组key的集合，但不存储value。由于key不能重复，所以，在Set中，没有重复的key。
+    var m = new Map([[1, 'x'], [2, 'y'], [3, 'z']]);  //Map是一组键值对的结构  [1,x]
+    for (var x of a) { // 遍历Array
+        // console.log(x);
+    }
+    for (var x of s) { // 遍历Set
+        // console.log(x);
+    }
+    for (var x of m) { // 遍历Map
+        // console.log(x[0] + '=' + x[1]);
+    }
+
+    // for in 和 for of 的区别：for in 循环的对象的属性key（意想不到的问题，循环将把name包括在内，但Array的length属性却不包括在内。这就是for of 诞生的原因），但是for of 循环的是集合本身的元素（也就是value）
+
+    var a = ['A', 'B', 'C'];
+    a.name = 'Hello';
+    for (var x in a) {
+        // console.log(x); // '0', '1', '2', 'name'
+    }
+
+    var a = ['A', 'B', 'C'];
+    a.name = 'Hello';
+    for (var x of a) {
+        // console.log(x); // 'A', 'B', 'C'
+    }
+
+    // 6. 前面我们讲到了JavaScript引擎有一个在行末自动添加分号的机制，这可能让你栽到return语句的一个大坑：
+    function foo() {
+        return; // 自动添加了分号，相当于return undefined;
+        { name: 'foo' }; // 这行语句已经没法执行到了
+    }
+    // 所以正确的多行写法是：
+
+    function foo() {
+        return { // 这里不会自动加分号，因为{表示语句尚未结束
+            name: 'foo'
+        };
+    }
+
+    //7.函数
+        // 1. 函数的arguments 和reset 
+        // 2. 结构赋值  数组是根据下标结构   对象是根据key结构赋值   结构赋值的默认值   结构赋值对象属性的变换  数组交换两个变量的值
+        let {name:name1}={age:15,name:'qps'};     
+        let [y1,x1]=[x=1,y=2];
+        // 3. apply调用  2个参数   和call 的区别    对普通函数调用，我们通常把this绑定为null。 也就是说this 的指针不需要转化
+        Math.max.apply(null,[5,13,4])
+        // 4.apply装饰器，动态的改变函数  比如统计parseInt 调用的次数
+          var count = 0;
+            var parseIntCopy = parseInt;
+            window.parseInt = function () {
+                count += 1;
+                return parseIntCopy.apply(null, arguments)
+            }
+            parseInt('10')
+        //map 和 reduce  牢记返回值         箭头函数什么时候不用return
+        //filter  和 史上最简单的去重法     利用数组的indexOf
+        //闭包的经典问题   廖雪峰  返回的都是16          闭包的诞生的原因  因为在外部访问不到函数内部的变量  作用：保存函数内部的变量  
+        //6. generator函数 写法3步  1. 函数加*号      2.yield 的使用   3. next 
+
+    //标准对象
+        // 1.toString   number toString .. 的问题
+
+
+
+
+    // 8. 包装对象  
+    // 虽然包装对象看上去和原来的值一模一样，显示出来也是一模一样，但他们的类型已经变为object了！所以，包装对象和原始值用 === 比较会返回false：
+    // number、boolean和string都有包装对象。没错，在JavaScript中，字符串也区分string类型和它的包装类型。包装对象用new创建：
+
+    typeof new Number(123); // 'object'
+    new Number(123) === 123; // false
+
+    typeof new Boolean(true); // 'object'
+    new Boolean(true) === true; // false
+
+    typeof new String('str'); // 'object'
+    new String('str') === 'str'; // false
+
+
+    // 9.日期  注意 使用Date.parse()时传入的字符串使用实际月份01~12，转换为Date对象后getMonth()获取的月份值为0~11。（其实在new Date的时候都默认使用Date.parse了）；
+
+    var date = new Date('2015-06-24T19:49:22.875+08:00')
+    // console.log(date.getMonth()); //5
+
+    // 那么在JavaScript中如何进行时区转换呢？实际上，只要我们传递的是一个number类型的时间戳，我们就不用关心时区转换。任何浏览器都可以把一个时间戳正确转换为本地时间。
+
+    // 所以不用担心时区转换的问题，传入时间戳后，new date（）就是当地时间，除非和我之前做的英文教育一样，在本地时区需要查看其它时区的时间，这就需要转化了。
+    
+
+    
+ 
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
